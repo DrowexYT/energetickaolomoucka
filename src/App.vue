@@ -16,25 +16,9 @@
     <div v-if="isAdmin" class="record-sale-link" id="record-sale-link">
       <a href="#" id="record-sale-anchor">Zaznamenat prodej</a>
     </div>
-    const isAdmin = ref(false); // Placeholder, replace with actual auth logic
-    const orderMessage = ref('Žádné položky nevybrány.');
-
-    function handleUpdateQuantity({ drinkName, delta }) {
-      const item = items.value.find(i => i.drink_name === drinkName);
-      if (!item) return;
-      const current = quantities.value[drinkName] || 0;
-      if (delta === 1 && current < item.quantity) {
-        quantities.value[drinkName] = current + 1;
-      } else if (delta === -1 && current > 0) {
-        quantities.value[drinkName] = current - 1;
-      }
-      orderMessage.value = updateOrderMessage();
-    }
-
-    orderMessage.value = updateOrderMessage();
     <div class="instagram-links">
       <p>Objednávku zašlete na Instagram:</p>
-      <a href="https://www.instagram.com/energeticka_olomoucka/" target="_blank"><i class="fab fa-instagram"></i> Náš Instagram</a>
+      <a href="https://www.instagram.com/energetickaolomoucka/" target="_blank">@energetickaolomoucka</a>
     </div>
     <div v-if="isAdmin">
       <a href="#" class="logout-btn">Odhlásit se</a>
@@ -224,87 +208,3 @@ h3 {
   box-shadow: 0 0 8px rgba(192, 57, 43, 0.5);
 }
 </style>
-function updateOrderMessage() {
-  let message = 'Chtěl bych objednat:\n';
-  let total = 0;
-  let hasItems = false;
-  for (const [drinkName, quantity] of Object.entries(quantities.value)) {
-    if (quantity > 0) {
-      const item = items.value.find(i => i.drink_name === drinkName);
-      message += `${quantity} ${drinkName}\n`;
-      total += quantity * item.sell_price;
-      hasItems = true;
-    }
-  }
-  if (!hasItems) {
-    message = 'Žádné položky nevybrány.';
-  } else {
-    message += `\nCelková částka: ${total.toFixed(2)} Kč`;
-  }
-  return message;
-}
-
-function copyOrder() {
-  const message = updateOrderMessage();
-  if (message === 'Žádné položky nevybrány.') {
-    alert('Žádné položky k zkopírování. Vyberte nějaké nápoje.');
-    return;
-  }
-  navigator.clipboard.writeText(message).then(() => {
-    // Show copy status
-    const copyButton = document.getElementById('copy-message');
-    const originalContent = '<i class="fas fa-copy"></i> Kopírovat objednávku';
-    copyButton.innerHTML = '<i class="fas fa-copy"></i> Zkopírováno';
-    setTimeout(() => {
-      copyButton.innerHTML = originalContent;
-    }, 2000);
-  });
-}
-</script>
-
-<template>
-  <div class="container">
-    <MainHeader />
-    <h2>Energetická Olomoucká</h2>
-    <h3>Vyber, zkopíruj a pošli na IG</h3>
-    <div class="filter-container">
-      <button class="filter-btn" :class="{ active: selectedBrand === 'all' }" @click="filterBrand('all')">Vše</button>
-      <button v-for="brand in brands" :key="brand" class="filter-btn" :class="{ active: selectedBrand === brand }" @click="filterBrand(brand)">{{ brand }}</button>
-    </div>
-    <RecordsList :items="filteredItems" :quantities="quantities.value" @update-quantity="handleUpdateQuantity" />
-    <h3>Tvoje objednávka</h3>
-    <div id="order-message">{{ orderMessage }}</div>
-    <div class="copy-container">
-      <button id="copy-message" class="copy-message" @click="copyOrder"><i class="fas fa-copy"></i> Kopírovat objednávku</button>
-    </div>
-    <div v-if="isAdmin" class="record-sale-link" id="record-sale-link">
-      <a href="#" id="record-sale-anchor">Zaznamenat prodej</a>
-    </div>
-    const isAdmin = ref(false); // Placeholder, replace with actual auth logic
-    const orderMessage = ref('Žádné položky nevybrány.');
-
-    function handleUpdateQuantity({ drinkName, delta }) {
-      const item = items.value.find(i => i.drink_name === drinkName);
-      if (!item) return;
-      const current = quantities.value[drinkName] || 0;
-      if (delta === 1 && current < item.quantity) {
-        quantities.value[drinkName] = current + 1;
-      } else if (delta === -1 && current > 0) {
-        quantities.value[drinkName] = current - 1;
-      }
-      orderMessage.value = updateOrderMessage();
-    }
-
-    orderMessage.value = updateOrderMessage();
-    <div class="instagram-links">
-      <p>Objednávku zašlete na Instagram:</p>
-      <a href="https://www.instagram.com/energeticka_olomoucka/" target="_blank"><i class="fab fa-instagram"></i> Náš Instagram</a>
-    </div>
-    <div v-if="isAdmin">
-      <a href="#" class="logout-btn">Odhlásit se</a>
-    </div>
-    <div v-else>
-      <a href="#" class="auth-btn">Přihlásit se (Admin)</a>
-    </div>
-  </div>
-</template>
