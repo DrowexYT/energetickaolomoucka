@@ -16,6 +16,22 @@
     <div v-if="isAdmin" class="record-sale-link" id="record-sale-link">
       <a href="#" id="record-sale-anchor">Zaznamenat prodej</a>
     </div>
+    const isAdmin = ref(false); // Placeholder, replace with actual auth logic
+    const orderMessage = ref('Žádné položky nevybrány.');
+
+    function handleUpdateQuantity({ drinkName, delta }) {
+      const item = items.value.find(i => i.drink_name === drinkName);
+      if (!item) return;
+      const current = quantities.value[drinkName] || 0;
+      if (delta === 1 && current < item.quantity) {
+        quantities.value[drinkName] = current + 1;
+      } else if (delta === -1 && current > 0) {
+        quantities.value[drinkName] = current - 1;
+      }
+      orderMessage.value = updateOrderMessage();
+    }
+
+    orderMessage.value = updateOrderMessage();
     <div class="instagram-links">
       <p>Objednávku zašlete na Instagram:</p>
       <a href="https://www.instagram.com/energeticka_olomoucka/" target="_blank"><i class="fab fa-instagram"></i> Náš Instagram</a>
