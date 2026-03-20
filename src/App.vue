@@ -29,6 +29,68 @@
   </div>
 </template>
 
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import MainHeader from './components/MainHeader.vue';
+import RecordsList from './components/RecordsList.vue';
+import itemsData from './lib/records.json';
+
+const items = ref(itemsData);
+const quantities = ref({});
+const selectedBrand = ref('all');
+const isAdmin = ref(false);
+
+const brands = computed(() => {
+  const allBrands = items.value.map(item => item.brand);
+  return [...new Set(allBrands)];
+});
+
+const filteredItems = computed(() => {
+  if (selectedBrand.value === 'all') {
+    return items.value;
+  }
+  return items.value.filter(item => item.brand === selectedBrand.value);
+});
+
+const orderMessage = computed(() => {
+  let message = 'Čau, chci si objednat:\n';
+  let hasItems = false;
+  for (const id in quantities.value) {
+    if (quantities.value[id] > 0) {
+      const item = items.value.find(item => item.id === parseInt(id));
+      if (item) {
+        message += `${item.name} ${item.flavor}: ${quantities.value[id]}x\n`;
+        hasItems = true;
+      }
+    }
+  }
+  return hasItems ? message : 'Nejdřív si něco vyber :)';
+});
+
+function filterBrand(brand) {
+  selectedBrand.value = brand;
+}
+
+function handleUpdateQuantity({ id, quantity }) {
+  if (!quantities.value[id]) {
+    quantities.value[id] = 0;
+  }
+  quantities.value[id] = quantity;
+}
+
+function copyOrder() {
+  navigator.clipboard.writeText(orderMessage.value).then(() => {
+    alert('Objednávka zkopírována!');
+  });
+}
+
+onMounted(() => {
+  items.value.forEach(item => {
+    quantities.value[item.id] = 0;
+  });
+});
+</script>
+
 <style scoped>
 body {
   font-family: 'Poppins', sans-serif;
