@@ -262,4 +262,3 @@ h3 {
   box-shadow: 0 0 8px rgba(192, 57, 43, 0.5);
 }
 </style>
-
