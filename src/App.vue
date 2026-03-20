@@ -92,14 +92,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-body {
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #2c3e50 0%, #263238 100%);
-  margin: 0;
-  padding: 20px;
-  box-sizing: border-box;
-  color: #f5f5f5;
-}
 .container {
   max-width: 60%;
   margin: 0 auto;
