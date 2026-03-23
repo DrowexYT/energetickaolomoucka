@@ -2,11 +2,11 @@
   <section class="records-list">
     <div id="items">
       <div class="item" v-for="item in items" :key="item.id">
-        <span>{{ item.drink_name }} - {{ item.sell_price }} Kč ({{ item.quantity }} k dispozici)</span>
+        <span>{{ item.name }} {{ item.flavor }} - {{ item.sell_price }} Kč ({{ item.quantity }} k dispozici)</span>
         <div class="quantity-controls">
-          <button class="minus" @click="$emit('update-quantity', { drinkName: item.drink_name, delta: -1 })">-</button>
-          <span class="quantity">{{ quantities[item.drink_name] || 0 }}</span>
-          <button class="plus" @click="$emit('update-quantity', { drinkName: item.drink_name, delta: 1 })" :disabled="quantities[item.drink_name] >= item.quantity">+</button>
+          <button class="minus" @click="$emit('update-quantity', { id: item.id, quantity: (quantities[item.id] || 0) - 1 })">-</button>
+          <span class="quantity">{{ quantities[item.id] || 0 }}</span>
+          <button class="plus" @click="$emit('update-quantity', { id: item.id, quantity: (quantities[item.id] || 0) + 1 })" :disabled="(quantities[item.id] || 0) >= item.quantity">+</button>
         </div>
       </div>
     </div>
